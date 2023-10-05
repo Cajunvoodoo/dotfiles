@@ -7,19 +7,26 @@
     ./programs/programs.nix
     ./services/services.nix
   ];
+  xdg.userDirs.enable = true;
+  home.homeDirectory = "/home/cajun";
   home = { stateVersion = "23.05"; };
 
   fonts.fontconfig = {
     enable = true;
   };
 
-  #gtk = {
-    #enable = true;
-    #font.name = "Iosevka";
-    #font.size = 14;
-    #theme.package = pkgs.dracula-theme;
-    #theme.name = "Dracula";
-  #};
+  gtk = {
+    enable = true;
+    iconTheme = {
+      name = "Adwaita-dark";
+      package = pkgs.gnome3.adwaita-icon-theme;
+    };
+
+    theme = {
+      name = "Adwaita-dark";
+      package = pkgs.gnome3.adwaita-icon-theme;
+    };
+  };
 
 #  home.file = {
 #    eww = {
@@ -47,4 +54,3 @@
 #    };
   };
 }
- 

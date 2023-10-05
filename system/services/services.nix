@@ -2,8 +2,10 @@
 
 {
   imports = [
-    ./yubico/default.nix
-    ./udev/default.nix
     ./agenix/default.nix
+    ./automount/default.nix
+    ./udev/default.nix
+    ./wpa-supplicant/default.nix
+    ./yubico/default.nix
   ];
 }

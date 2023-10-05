@@ -1,27 +1,71 @@
 { config, lib, pkgs, ...}:
 
 {
+  # Xmonad config
   services = {
+    gnome.gnome-keyring.enable = true;
+    upower.enable = true;
+
+    dbus = {
+      enable = true;
+      packages = [ pkgs.dconf ];
+    };
+
     xserver = {
       enable = true;
+
+      #extraLayouts.us-custom = {
+        #description = "US layout with custom hyper keys";
+        #languages   = [ "eng" ];
+        #symbolsFile = ./us-custom.xkb;
+      #};
+
       layout = "us";
-      xkbVariant = "";
 
       videoDrivers = [ "nvidia" ];
 
       libinput = {
         enable = true;
-        touchpad.disableWhileTyping = true;
+        touchpad = {
+          disableWhileTyping = true;
+          naturalScrolling = true;
+        };
       };
-      
+
+      serverLayoutSection = ''
+        Option "StandbyTime" "0"
+        Option "SuspendTime" "0"
+        Option "OffTime"     "0"
+      '';
+
+      displayManager = {
+        defaultSession = "none+xmonad";
+	sddm.enable = true;
+      };
+
       windowManager.xmonad = {
-        enable = false;
+        enable = true;
         enableContribAndExtras = true;
       };
-      displayManager.sddm.enable = true;
-      desktopManager.plasma5.enable = true;
+
+      # does not work, setting it manually on start up
+      xkbOptions = "ctrl:nocaps";
+
     };
   };
+
+  hardware.bluetooth = {
+    enable = true;
+    settings = {
+      General = {
+        Enable = "Source,Sink,Media,Socket";
+      };
+   };
+  };
+
+  services.blueman.enable = true;
+
+  systemd.services.upower.enable = true;
 
   hardware.nvidia = {
     modesetting.enable = true;
@@ -29,13 +73,13 @@
     open = false;
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
-    
+
     prime = {
       offload = {
         enable = true;
         enableOffloadCmd = true;
       };
-      
+
       intelBusId  = "PCI:0:2:0";
       nvidiaBusId = "PCI:1:0:0";
     };

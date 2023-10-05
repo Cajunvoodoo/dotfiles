@@ -6,12 +6,12 @@
 
 {
   imports =
-    [ 
+    [
       #include system configuration, which does not rely on home-manager
       ./system/system.nix
       <home-manager/nixos>
     ];
-  
+
   nix = {
     settings.auto-optimise-store = true;
     nixPath = [
@@ -32,7 +32,7 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   hardware.system76.enableAll = true;
-  
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -46,7 +46,7 @@
   boot.initrd.luks.devices."luks-d89b562b-2f43-4f4e-b811-f712bec9c992".device = "/dev/disk/by-uuid/d89b562b-2f43-4f4e-b811-f712bec9c992";
   boot.initrd.luks.devices."luks-d89b562b-2f43-4f4e-b811-f712bec9c992".keyFile = "/crypto_keyfile.bin";
 
-  networking.hostName = "cajun"; # Define your hostname.
+  # networking.hostName = "cajun"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -54,10 +54,10 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
-  networking.networkmanager.enable = true;
+  # networking.networkmanager.enable = true;
 
   # Set your time zone.
-  time.timeZone = "America/Chicago";
+  time.timeZone = "America/New_York";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -106,9 +106,11 @@
     shell = pkgs.fish;
     packages = with pkgs; [
       firefox
-      kate
       fish
       niv
+
+      # Misc OpenGL packages
+      glew
     #  thunderbird
     ];
   };
@@ -118,6 +120,8 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+  # Allow broken packages
+  # nixpkgs.config.allowBroken = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -126,12 +130,18 @@
  #  wget
     system76-firmware
     dmenu
-    #haskell.compiler.ghc92
-    #haskell.packages.ghc92.haskell-language-server
-    #haskell.packages.ghc92.cabal-install
+    # haskell.compiler.ghc92
+    # haskell.packages.ghc92.haskell-language-server
+    # haskell.packages.ghc92.cabal-install
+
+    jetbrains.idea-ultimate
+    jetbrains.jdk
+    graalvm11-ce
     #haskell.packages.ghc92.ghc
-    
+
   ];
+  # TODO: move symlinks like graalvm to dedicated file
+  environment.etc."jdks/graalvm11-ce".source = "${pkgs.graalvm11-ce}";
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

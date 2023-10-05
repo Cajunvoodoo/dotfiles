@@ -27,18 +27,22 @@ in
     ./bat/default.nix
     ./fzf/default.nix
   ];
-  
+
   #not in home manager for some reason
   home.packages = [ pkgs.oh-my-fish ];
 
   programs.fish = {
     enable = true;
-    
+
     plugins = [
-      fzf  
+      fzf
       theme-dmorrell
     ];
-    
+
+    shellAliases = {
+      rebuild = "rm -f ~/.gtkrc-2.0 ~/.config/gtk-4.0/settings.ini ~/.config/gtk-3.0/settings.ini ~/.xmonad/xmonad-x86_64-linux && sudo nixos-rebuild switch";
+    };
+
     interactiveShellInit = ''
       source ${theme-dmorrell.src}/fish_prompt.fish
       source ${theme-dmorrell.src}/fish_right_prompt.fish
