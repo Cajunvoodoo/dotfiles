@@ -31,7 +31,6 @@
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  hardware.system76.enableAll = true;
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
