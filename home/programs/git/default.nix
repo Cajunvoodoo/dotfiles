@@ -15,7 +15,7 @@
       commit.gpgsign = true;
       gpg.format = "ssh";
       gpg.ssh.allowedSignersFile = "/home/cajun/ssh/allowed_signers";
-      user.signingkey = "/home/cajun/.ssh/github_cajun_signing.pub";
+      user.signingKey = "/home/cajun/.ssh/github_cajun_signing.pub";
     };
   };
 }
