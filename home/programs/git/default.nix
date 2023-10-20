@@ -2,7 +2,7 @@
 
 {
   home.file.".ssh/allowed_signers".text =
-    "* ${builtins.readFile /home/cajun/.ssh/id_ed25519.pub}";
+    "* ${builtins.readFile /home/cajun/.ssh/github_cajun_signing.pub}";
 
   programs.git = {
     enable = true;
@@ -14,8 +14,8 @@
     extraConfig = {
       commit.gpgsign = true;
       gpg.format = "ssh";
-      gpg.ssh.allowedSignersFile = "/home/cajun/ssh/allowed_signers";
-      user.signingKey = "/home/cajun/.ssh/github_cajun_signing.pub";
+      gpg.ssh.allowedSignersFile = "/home/cajun/.ssh/allowed_signers";
+      user.signingkey = "/home/cajun/.ssh/github_cajun_signing.pub";
     };
   };
 }
