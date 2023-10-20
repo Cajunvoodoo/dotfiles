@@ -14,8 +14,8 @@
     extraConfig = {
       commit.gpgsign = true;
       gpg.format = "ssh";
-      gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
-      user.signingkey = "~/.ssh/github_cajun_signing.pub";
+      gpg.ssh.allowedSignersFile = "/home/cajun/ssh/allowed_signers";
+      user.signingkey = "/home/cajun/.ssh/github_cajun_signing.pub";
     };
   };
 }
