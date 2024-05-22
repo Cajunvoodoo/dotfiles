@@ -11,6 +11,11 @@
       packages = [ pkgs.dconf ];
     };
 
+    displayManager = {
+      defaultSession = "none+xmonad";
+	    sddm.enable = true;
+    };
+
     xserver = {
       enable = true;
 
@@ -20,7 +25,7 @@
         #symbolsFile = ./us-custom.xkb;
       #};
 
-      layout = "us";
+
 
       videoDrivers = [ "nvidia" ];
 
@@ -38,10 +43,6 @@
         Option "OffTime"     "0"
       '';
 
-      displayManager = {
-        defaultSession = "none+xmonad";
-	sddm.enable = true;
-      };
 
       windowManager.xmonad = {
         enable = true;
@@ -49,13 +50,16 @@
       };
 
       # does not work, setting it manually on start up
-      xkbOptions = "ctrl:nocaps";
+      xkb = {
+        options = "ctrl:nocaps";
+        layout = "us";
+      };
 
     };
   };
 
   hardware.bluetooth = {
-    enable = false;
+    enable = true;
     settings = {
       General = {
         Enable = "Source,Sink,Media,Socket";
@@ -93,6 +97,10 @@
       vaapiIntel
       vaapiVdpau
       libvdpau-va-gl
+    ];
+
+    extraPackages32 = pkgs.lib.mkForce [
+      pkgs.linuxPackages_latest.nvidia_x11.lib32
     ];
   };
 

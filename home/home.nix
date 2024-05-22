@@ -37,7 +37,7 @@
 #
 #  };
 
-  programs.alacritty = {
+  programs.wezterm = {
     enable = true;
 #    settings = {
 #      main = {

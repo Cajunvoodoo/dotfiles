@@ -7,4 +7,14 @@ in
   "github.age".publicKeys = [ cajun ];
 
   "nuwave.age".publicKeys = [ cajun ];
+
+  "wireguard.age".publicKeys = [ cajun ];
+
+  "rmfakecloud-env.age".publicKeys = [ cajun ];
+
+  "rmfakecloud-https.key.age".publicKeys = [ cajun ];
+
+  "rmfakecloud-https.crt.age".publicKeys = [ cajun ];
+
+  "nordvpn.age".publicKeys = [ cajun ];
 }

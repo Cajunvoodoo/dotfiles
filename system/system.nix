@@ -6,5 +6,6 @@
     ./wm/xmonad.nix
     ./hardware/hardware.nix
     ./programs/programs.nix
+    ./fonts/fonts.nix
   ];
 }

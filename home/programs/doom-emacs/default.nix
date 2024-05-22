@@ -14,6 +14,8 @@
     package = pkgs.emacs-gtk;
     extraPackages = epkgs: [
       epkgs.vterm
+      epkgs.irony
+      epkgs.irony-eldoc
     ];
   };
 
@@ -23,6 +25,7 @@
   home.packages = with pkgs; [
     ## Emacs itself
     binutils
+    coreutils
     # 28.2 + native-comp
     #((emacsPackagesFor pkgs.emacs-gtk).emacsWithPackages
       #(epkgs: [ epkgs.vterm ]))
@@ -32,11 +35,14 @@
     (ripgrep.override {withPCRE2 = true;})
     gnutls
 
+    ## Treemacs
+    python3
+
     ## Optional dependencies
     imagemagick
     zstd
     sqlite
-    gcc
+    # gcc # moved to environment.systemPackages
 
     ## Module dependencies
     # :checkers spell
@@ -47,6 +53,15 @@
     sqlite
     # :lang latex & :lang org (latex previews)
     texlive.combined.scheme-medium
+    # :app everywhere
+    xclip
+    xdotool
+    xorg.xwininfo
+    # :lang cc
+    # clang # moved to environment.systemPackages
+    # clang-tools
+    # github copilot
+    nodejs_21
 
     ## Fonts
     dejavu_fonts

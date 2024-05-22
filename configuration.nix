@@ -4,16 +4,48 @@
 
 { variables, config, pkgs, ... }:
 
+let
+  # nix-gaming = import (builtins.fetchTarball "https://github.com/fufexan/nix-gaming/archive/master.tar.gz");
+  # nh = import (builtins.fetchTarball "https://github.com/viperML/nh/archive/master.tar.gz");
+  # nixd = import (builtins.fetchTarball "https://github.com/nix-community/nixd/archive/refs/tags/2.0.2.tar.gz");
+  xmonad-config = (import /home/cajun/Projects/Haskell/xmonad-flake).nixosModules;
+in
 {
   imports =
     [
       #include system configuration, which does not rely on home-manager
       ./system/system.nix
       <home-manager/nixos>
+      # nix-gaming.nixosModules.pipewireLowLatency
+      # (nh.nixosModules)
+
     ];
 
+  nixpkgs.overlays = [
+    (self: super: {
+      cajun-xmonad = (builtins.getFlake "/home/cajun/Projects/Haskell/xmonad-flake").nixosModules.default;
+    })
+    # (newPkg: oldPkgs: {
+    #   haskellPackages = oldPkgs.haskellPackages.override (old: {
+    #     overrides = oldPkgs.lib.composeExtensions (old.overrides or (_: _: {  }))
+    #       (self: super: {
+    #         cajun-xmonad = self.callCabal2nix "cajun-xmonad" /home/cajun/Projects/Haskell/xmonad-flake {};
+    #       });
+    #   });
+    # })
+  ];
+
+  # cajun.desktop.wm = {
+  #   enable = true;
+  # };
+
+
   nix = {
-    settings.auto-optimise-store = true;
+    settings = {
+      auto-optimise-store = true;
+      experimental-features = [ "nix-command" "flakes" "ca-derivations"];
+      trusted-users = [ "@wheel" ];
+    };
     nixPath = [
       "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
       #FIXME: make this dependent on a variable instead of strictly cajun
@@ -21,16 +53,22 @@
       "/nix/var/nix/profiles/per-user/root/channels"
     ];
   };
+  documentation.enable = true;
+  documentation.man.enable = true;
+  documentation.dev.enable = true;
+  documentation.nixos.enable = true;
+  documentation.man.generateCaches = false;
 
-  # Binary Cache for Haskell.nix
-  nix.settings.trusted-public-keys = [
-    "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ="
+  # Enables NixOS to compile and run software for these systems using
+  # qemu emulation.
+  # TODO: add packages that are useful (e.g. the dynamic loaders, other such things)
+  #       to the binfmt dependencies
+  boot.binfmt.emulatedSystems = [
+    "aarch64-linux"
+    "x86_64-windows"
+    "riscv64-linux"
+    "i686-linux"
   ];
-  nix.settings.substituters = [
-    "https://cache.iog.io"
-  ];
-
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -75,10 +113,16 @@
 
   programs.dconf.enable = true;
   programs.fish.enable = true;
-  environment.shells = [ pkgs.bashInteractive pkgs.fish];
+  environment.shells = [ pkgs.bashInteractive pkgs.fish ];
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
 
   # Enable sound with pipewire.
   sound.enable = true;
@@ -95,23 +139,104 @@
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
     #media-session.enable = true;
+    # lowLatency = {
+    #   # enable this module
+    #   enable = true;
+    #   # defaults (no need to be set unless modified)
+    #   quantum = 64;
+    #   rate = 48000;
+    # };
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.cajun = {
     isNormalUser = true;
     description = "cajun";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "video" ];
     shell = pkgs.fish;
     packages = with pkgs; [
       firefox
       fish
       niv
+      # nil
+      nixd # A better nix language server
+      slack
+      obs-studio
+      zoom-us
 
-      # Misc OpenGL packages
-      glew
-    #  thunderbird
+      # TODO: after switching to a flake, use `github:viperML/nh` instead
+      nix-output-monitor
+      busybox
+      toybox
+
+      pwndbg
+
+      rmfakecloud
+
+      nixfmt-rfc-style
+      (callPackage ./rcu { })
+
+      steam-run
+
+      minigalaxy
     ];
+  };
+
+  services.xrdp = {
+    enable = true;
+    defaultWindowManager = "xmonad";
+    openFirewall = true;
+  };
+
+  # Dynamic loader assistance for pre-build binaries
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+            # Without these it silently fails
+      xorg.libXinerama
+      xorg.libXcursor
+      xorg.libXrender
+      xorg.libXScrnSaver
+      xorg.libXi
+      xorg.libSM
+      xorg.libICE
+
+      xorg.libXt
+      xorg.libXmu
+      xorg.libXft
+    ];
+  };
+
+
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+    # extraCompatPackages = [
+    #   # add the packages that you would like to have in Steam's extra compatibility packages list
+    #   # pkgs.luxtorpeda
+    #   # inputs.nix-gaming.packages.${pkgs.system}.proton-ge
+    #   nix-gaming.packages.${pkgs.hostPlatform.system}.proton-ge
+    #   # etc.
+    # ];
+  };
+
+  systemd.services.rmfakecloud = {
+    enable = false;
+    description = "Fake cloud service for Remarkable devices";
+
+    unitConfig = {
+      Type = "simple";
+      After = [ "network-online.target" ];
+      Wants = [ "network-online.target" ];
+    };
+
+    serviceConfig = {
+      ExecStart = "${pkgs.rmfakecloud}/bin/rmfakecloud";
+      EnvironmentFile = config.age.secrets.rmfakecloud-env.path;
+    };
+
+    wantedBy = [ "multi-user.target" ];
   };
 
   #configure home-manager for cajun
@@ -128,19 +253,46 @@
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
  #  wget
     system76-firmware
+    system76-keyboard-configurator
     dmenu
-    # haskell.compiler.ghc92
-    # haskell.packages.ghc92.haskell-language-server
-    # haskell.packages.ghc92.cabal-install
+    (callPackage ./binaryninja { })
+    #
+    steam-run
+    wireshark
+    # shit that doesn't work on nixos? Probably need to sink a few hours here
+    # cloudflare-warp
+    #
+    spice-gtk
+    # server management
+    terraform
+    flyctl
+    # linux manpages
+    linux-manual
+    man-pages
+    man-pages-posix
 
     jetbrains.idea-ultimate
     jetbrains.jdk
-    graalvm11-ce
+    # graalvm11-ce
+    # jdk11
+    fontconfig
+    # python3
+    # nix-gaming.packages.${pkgs.hostPlatform.system}.proton-ge
     #haskell.packages.ghc92.ghc
 
   ];
+  virtualisation.spiceUSBRedirection.enable = true;
+
+  programs.ssh = {
+    startAgent = true;
+  };
+  # security.wrappers.spice-client-glib-usb-acl-helper.source = "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";
   # TODO: move symlinks like graalvm to dedicated file
-  environment.etc."jdks/graalvm11-ce".source = "${pkgs.graalvm11-ce}";
+  # environment.etc."jdks/graalvm11-ce".source = "${pkgs.graalvm11-ce}";
+  # services.cloudflared.tunnels.nuccdc.warp-routing.enabled = true;
+  # services.cloudflared = {
+  #   enable = true;
+  # };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

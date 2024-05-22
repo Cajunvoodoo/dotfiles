@@ -251,7 +251,7 @@ myPolybarLogHook dbus = myLogHook <+> dynamicLogWithPP (polybarHook dbus)
 -- Key bindings. Add, modify or remove key bindings here.
 --
 
-myTerminal   = "alacritty"
+myTerminal   = "wezterm"
 appLauncher  = "rofi -modi drun,ssh,window -show drun -show-icons"
 calcLauncher = "rofi -show calc -modi calc -no-show-match -no-sort"
 emojiPicker  = "rofi -modi emoji -show emoji -emoji-mode copy"
@@ -262,7 +262,7 @@ showKeybindings :: [((KeyMask, KeySym), NamedAction)] -> NamedAction
 showKeybindings xs =
   let
     filename = "/home/cajun/.config/xmonad/keybindings"
-    command f = "alacritty -e dialog --title 'XMonad Key Bindings' --colors --hline \"$(date)\" --textbox " ++ f ++ " 50 100"
+    command f = "wezterm -e dialog --title 'XMonad Key Bindings' --colors --hline \"$(date)\" --textbox " ++ f ++ " 50 100"
   in addName "Show Keybindings" $ do
     b <- liftIO $ doesFileExist filename
     unless b $ liftIO (writeFile filename (unlines $ showKm xs))
@@ -281,8 +281,8 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "Stop"          (0, xF86XK_AudioStop              ) $ spawn $ playerctl "stop"
     , key "Previous"      (0, xF86XK_AudioPrev              ) $ spawn $ playerctl "previous"
     , key "Next"          (0, xF86XK_AudioNext              ) $ spawn $ playerctl "next"
-    , key "Inc Screen"    (0, xF86XK_MonBrightnessUp        ) $ spawn "expr `cat /sys/class/backlight/acpi_video0/brightness` + 1 > /sys/class/backlight/acpi_video0/brightness"
-    , key "Dec Screen"    (0, xF86XK_MonBrightnessDown      ) $ spawn "expr `cat /sys/class/backlight/acpi_video0/brightness` - 1 > /sys/class/backlight/acpi_video0/brightness"
+    , key "Inc Screen"    (0, xF86XK_MonBrightnessUp        ) $ spawn "/run/current-system/sw/bin/brightnessctl -q s +10%"
+    , key "Dec Screen"    (0, xF86XK_MonBrightnessDown      ) $ spawn "/run/current-system/sw/bin/brightnessctl -q s 10%-"
     ] ^++^
   keySet "Launchers"
     [ key "Terminal"      (modm .|. shiftMask  , xK_Return  ) $ spawn (XMonad.terminal conf)
@@ -469,7 +469,7 @@ data App
   deriving Show
 
 audacious = ClassApp "Audacious"            "audacious"
-btm       = TitleApp "btm"                  "alacritty -t btm -e btm --color gruvbox --default_widget_type proc"
+btm       = TitleApp "btm"                  "wezterm -t btm -e btm --color gruvbox --default_widget_type proc"
 calendar  = ClassApp "Orage"                "orage"
 eog       = NameApp  "eog"                  "eog"
 evince    = ClassApp "Evince"               "evince"
@@ -602,7 +602,7 @@ projects =
   ]
 
 terminalWithCommand :: String -> String
-terminalWithCommand cmd = "alacritty -o shell.program=fish -o shell.args=['-C " <> cmd <> "']"
+terminalWithCommand cmd = "wezterm -o shell.program=fish -o shell.args=['-C " <> cmd <> "']"
 
 
 projectsTheme :: XPConfig
