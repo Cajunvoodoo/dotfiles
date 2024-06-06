@@ -298,6 +298,7 @@ in {
     extraConfig = ''
       IdentityFile ~/.ssh/hacker96
       IdentityFile ~/.ssh/desktop_ed25519
+      IdentityFile ~/.ssh/id_ed25519
     '';
   };
   # security.wrappers.spice-client-glib-usb-acl-helper.source = "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";
