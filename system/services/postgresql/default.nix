@@ -1,11 +1,9 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   config.services.postgresql = {
     enable = true;
     enableTCPIP = true;
 
-    ensureDatabases = [ "backend" ];
+    ensureDatabases = ["backend"];
     authentication = pkgs.lib.mkOverride 10 ''
       #type database  DBuser  auth-method
       local all       all     trust

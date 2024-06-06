@@ -1,6 +1,4 @@
-{ pkgs, ...}:
-
-let
+{pkgs, ...}: let
   xrandr = "${pkgs.xorg.xrandr}/bin/xrandr";
 in
   pkgs.writeShellScriptBin "monitor" ''

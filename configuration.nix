@@ -1,53 +1,53 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ variables, config, pkgs, ... }:
-
-let
+{
+  inputs,
+  variables,
+  config,
+  pkgs,
+  ...
+}: let
   # nix-gaming = import (builtins.fetchTarball "https://github.com/fufexan/nix-gaming/archive/master.tar.gz");
   # nh = import (builtins.fetchTarball "https://github.com/viperML/nh/archive/master.tar.gz");
   # nixd = import (builtins.fetchTarball "https://github.com/nix-community/nixd/archive/refs/tags/2.0.2.tar.gz");
   xmonad-config = (import /home/cajun/Projects/Haskell/xmonad-flake).nixosModules;
-in
-{
-  imports =
-    [
-      #include system configuration, which does not rely on home-manager
-      ./system/system.nix
-      <home-manager/nixos>
-      # nix-gaming.nixosModules.pipewireLowLatency
-      # (nh.nixosModules)
-
-    ];
-
-  nixpkgs.overlays = [
-    (self: super: {
-      cajun-xmonad = (builtins.getFlake "/home/cajun/Projects/Haskell/xmonad-flake").nixosModules.default;
-    })
-    # (newPkg: oldPkgs: {
-    #   haskellPackages = oldPkgs.haskellPackages.override (old: {
-    #     overrides = oldPkgs.lib.composeExtensions (old.overrides or (_: _: {  }))
-    #       (self: super: {
-    #         cajun-xmonad = self.callCabal2nix "cajun-xmonad" /home/cajun/Projects/Haskell/xmonad-flake {};
-    #       });
-    #   });
-    # })
+in {
+  imports = [
+    #include system configuration, which does not rely on home-manager
+    ./system/system.nix
+    # <home-manager/nixos>
+    # nix-gaming.nixosModules.pipewireLowLatency
+    # (nh.nixosModules)
   ];
+
+  # nixpkgs.overlays = [
+  #   (self: super: {
+  #     cajun-xmonad = (builtins.getFlake "/home/cajun/Projects/Haskell/xmonad-flake").nixosModules.default;
+  #   })
+  #   # (newPkg: oldPkgs: {
+  #   #   haskellPackages = oldPkgs.haskellPackages.override (old: {
+  #   #     overrides = oldPkgs.lib.composeExtensions (old.overrides or (_: _: {  }))
+  #   #       (self: super: {
+  #   #         cajun-xmonad = self.callCabal2nix "cajun-xmonad" /home/cajun/Projects/Haskell/xmonad-flake {};
+  #   #       });
+  #   #   });
+  #   # })
+  # ];
 
   # cajun.desktop.wm = {
   #   enable = true;
   # };
 
-
   nix = {
     settings = {
       auto-optimise-store = true;
-      experimental-features = [ "nix-command" "flakes" "ca-derivations"];
-      trusted-users = [ "@wheel" ];
+      experimental-features = ["nix-command" "flakes" "ca-derivations"];
+      trusted-users = ["@wheel"];
     };
     nixPath = [
-      "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
+      # "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
+      "nixpkgs=${inputs.nixpkgs}" # FLAKE, NIXD
       #FIXME: make this dependent on a variable instead of strictly cajun
       "nixos-config=/home/cajun/dotfiles/configuration.nix"
       "/nix/var/nix/profiles/per-user/root/channels"
@@ -85,6 +85,8 @@ in
 
   # networking.hostName = "cajun"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.wireguard.enable = true;
+  services.tailscale.enable = true;
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -113,7 +115,7 @@ in
 
   programs.dconf.enable = true;
   programs.fish.enable = true;
-  environment.shells = [ pkgs.bashInteractive pkgs.fish ];
+  environment.shells = [pkgs.bashInteractive pkgs.fish];
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -152,7 +154,7 @@ in
   users.users.cajun = {
     isNormalUser = true;
     description = "cajun";
-    extraGroups = [ "networkmanager" "wheel" "video" ];
+    extraGroups = ["networkmanager" "wheel" "video"];
     shell = pkgs.fish;
     packages = with pkgs; [
       firefox
@@ -174,11 +176,12 @@ in
       rmfakecloud
 
       nixfmt-rfc-style
-      (callPackage ./rcu { })
 
       steam-run
 
       minigalaxy
+
+      wgnord # nordvpn
     ];
   };
 
@@ -192,7 +195,7 @@ in
   programs.nix-ld = {
     enable = true;
     libraries = with pkgs; [
-            # Without these it silently fails
+      # Without these it silently fails
       xorg.libXinerama
       xorg.libXcursor
       xorg.libXrender
@@ -207,7 +210,6 @@ in
     ];
   };
 
-
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
@@ -221,29 +223,29 @@ in
     # ];
   };
 
-  systemd.services.rmfakecloud = {
-    enable = false;
-    description = "Fake cloud service for Remarkable devices";
+  # systemd.services.rmfakecloud = {
+  #   enable = false;
+  #   description = "Fake cloud service for Remarkable devices";
 
-    unitConfig = {
-      Type = "simple";
-      After = [ "network-online.target" ];
-      Wants = [ "network-online.target" ];
-    };
+  #   unitConfig = {
+  #     Type = "simple";
+  #     After = [ "network-online.target" ];
+  #     Wants = [ "network-online.target" ];
+  #   };
 
-    serviceConfig = {
-      ExecStart = "${pkgs.rmfakecloud}/bin/rmfakecloud";
-      EnvironmentFile = config.age.secrets.rmfakecloud-env.path;
-    };
+  #   serviceConfig = {
+  #     ExecStart = "${pkgs.rmfakecloud}/bin/rmfakecloud";
+  #     EnvironmentFile = config.age.secrets.rmfakecloud-env.path;
+  #   };
 
-    wantedBy = [ "multi-user.target" ];
-  };
+  #   wantedBy = [ "multi-user.target" ];
+  # };
 
   #configure home-manager for cajun
-  home-manager.users.cajun = import ./home/home.nix;
+  # home-manager.users.cajun = import ./home/home.nix;
 
   # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+  # nixpkgs.config.allowUnfree = true;
   # Allow broken packages
   # nixpkgs.config.allowBroken = true;
 
@@ -251,11 +253,19 @@ in
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
- #  wget
+    #  wget
     system76-firmware
     system76-keyboard-configurator
     dmenu
-    (callPackage ./binaryninja { })
+    # SOLUTION: write a function that just runs it normally, rather than making
+    # a new default.nix and whatnot
+    (callPackage ./rcu {
+      #rcu-tar-path = config.age.secrets."rcu.tar.gz".path;
+    })
+
+    (callPackage ./binaryninja {
+      #binary-ninja-path = config.age.secrets."binary-ninja.tar.gz".file;
+    })
     #
     steam-run
     wireshark
@@ -279,12 +289,16 @@ in
     # python3
     # nix-gaming.packages.${pkgs.hostPlatform.system}.proton-ge
     #haskell.packages.ghc92.ghc
-
   ];
   virtualisation.spiceUSBRedirection.enable = true;
 
+  # FIXME: move the identityfile stuff into home manager, as this prevents multi-user installs and requires those files exist on each machine
   programs.ssh = {
     startAgent = true;
+    extraConfig = ''
+      IdentityFile ~/.ssh/hacker96
+      IdentityFile ~/.ssh/desktop_ed25519
+    '';
   };
   # security.wrappers.spice-client-glib-usb-acl-helper.source = "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";
   # TODO: move symlinks like graalvm to dedicated file
@@ -320,5 +334,4 @@ in
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
-
 }

@@ -1,6 +1,9 @@
-{ config, lib, pkgs, ...}:
-
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   # Xmonad config
   services = {
     gnome.gnome-keyring.enable = true;
@@ -8,26 +11,24 @@
 
     dbus = {
       enable = true;
-      packages = [ pkgs.dconf ];
+      packages = [pkgs.dconf];
     };
 
     displayManager = {
       defaultSession = "none+xmonad";
-	    sddm.enable = true;
+      sddm.enable = true;
     };
 
     xserver = {
       enable = true;
 
       #extraLayouts.us-custom = {
-        #description = "US layout with custom hyper keys";
-        #languages   = [ "eng" ];
-        #symbolsFile = ./us-custom.xkb;
+      #description = "US layout with custom hyper keys";
+      #languages   = [ "eng" ];
+      #symbolsFile = ./us-custom.xkb;
       #};
 
-
-
-      videoDrivers = [ "nvidia" ];
+      videoDrivers = ["nvidia"];
 
       libinput = {
         enable = true;
@@ -43,7 +44,6 @@
         Option "OffTime"     "0"
       '';
 
-
       windowManager.xmonad = {
         enable = true;
         enableContribAndExtras = true;
@@ -54,7 +54,6 @@
         options = "ctrl:nocaps";
         layout = "us";
       };
-
     };
   };
 
@@ -64,7 +63,7 @@
       General = {
         Enable = "Source,Sink,Media,Socket";
       };
-   };
+    };
   };
 
   services.blueman.enable = true;
@@ -84,7 +83,7 @@
         enableOffloadCmd = true;
       };
 
-      intelBusId  = "PCI:0:2:0";
+      intelBusId = "PCI:0:2:0";
       nvidiaBusId = "PCI:1:0:0";
     };
   };

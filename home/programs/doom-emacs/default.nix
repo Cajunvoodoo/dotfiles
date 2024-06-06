@@ -1,12 +1,14 @@
-{ pkgs, lib, config, ...}:
-
 {
-
+  pkgs,
+  lib,
+  config,
+  ...
+}: {
   #for emacs-unstable
   #nixpkgs.overlays = [
-    #(import (builtins.fetchTarball {
-      #url = https://github.com/nix-community/emacs-overlay/archive/master.tar.gz;
-    #}))
+  #(import (builtins.fetchTarball {
+  #url = https://github.com/nix-community/emacs-overlay/archive/master.tar.gz;
+  #}))
   #];
 
   programs.emacs = {
@@ -28,8 +30,12 @@
     coreutils
     # 28.2 + native-comp
     #((emacsPackagesFor pkgs.emacs-gtk).emacsWithPackages
-      #(epkgs: [ epkgs.vterm ]))
+    #(epkgs: [ epkgs.vterm ]))
     #cmake
+
+    emacsPackages.agda-input
+    emacsPackages.agda2-mode
+    emacsPackages.agda-editor-tactics
 
     ## Doom dependencies
     (ripgrep.override {withPCRE2 = true;})
@@ -46,7 +52,7 @@
 
     ## Module dependencies
     # :checkers spell
-    (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
+    (aspellWithDicts (ds: with ds; [en en-computers en-science]))
     # :tools editorconfig
     editorconfig-core-c
     # :tools lookup & :lang org +roam
@@ -61,7 +67,7 @@
     # clang # moved to environment.systemPackages
     # clang-tools
     # github copilot
-    nodejs_21
+    nodejs_22
 
     ## Fonts
     dejavu_fonts
@@ -72,7 +78,6 @@
     font-awesome
     # modeline
     nerdfonts
-
   ];
 
   fonts.fontconfig.enable = true;

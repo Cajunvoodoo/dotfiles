@@ -1,6 +1,11 @@
-{ font0 ? 16, font1 ? 18, font2 ? 40, font3 ? 28, font4 ? 7, font5 ? 16 }:
-
-let
+{
+  font0 ? 16,
+  font1 ? 18,
+  font2 ? 40,
+  font3 ? 28,
+  font4 ? 7,
+  font5 ? 16,
+}: let
   bar = ''
     [bar/main]
     monitor = eDP-1
@@ -68,4 +73,4 @@ let
     enable-ipc = true
   '';
 in
-bar + top + bottom
+  bar + top + bottom

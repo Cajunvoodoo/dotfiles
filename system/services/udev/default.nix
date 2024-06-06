@@ -1,8 +1,10 @@
-{ config, pkgs, ...}:
-
 {
+  config,
+  pkgs,
+  ...
+}: {
   services.udev = {
-    packages = [ pkgs.yubikey-personalization ];
+    packages = [pkgs.yubikey-personalization];
   };
 
   # Adds a udev rule allowing users in the video group to modify backlight

@@ -1,8 +1,13 @@
-{ config, pkgs, ...}:
-
 {
-  imports = [ <agenix/modules/age.nix> ];
-  environment.systemPackages = [ (pkgs.callPackage <agenix/pkgs/agenix.nix> {}) ];
+  inputs,
+  config,
+  pkgs,
+  ...
+}: {
+  # imports = [ <agenix/modules/age.nix> ];
+  imports = [inputs.agenix.nixosModules.default];
+  # environment.systemPackages = [ (pkgs.callPackage <agenix/pkgs/agenix.nix> {}) ];
+  environment.systemPackages = [inputs.agenix.packages.x86_64-linux.default];
 
   age.secrets.nuwave = {
     file = ./secrets/NUwave.age;
@@ -29,5 +34,21 @@
     owner = "cajun";
   };
 
-  age.identityPaths = [ "/home/cajun/.ssh/id_ed25519" ];
+  age.secrets.nordvpn-token = {
+    file = ./secrets/nordvpn-token.age;
+    owner = "cajun";
+  };
+
+  # Binary Ninja tar file, to avoid leaking it to the public
+  # age.secrets."binary-ninja.tar.gz" = {
+  #   file = ./secrets/binary-ninja.tar.gz.age;
+  #   owner = "cajun";
+  # };
+
+  # age.secrets."rcu.tar.gz" = {
+  #   file = ./secrets/rcu.tar.gz.age;
+  #   owner = "cajun";
+  # };
+
+  age.identityPaths = ["/home/cajun/.ssh/id_ed25519"];
 }

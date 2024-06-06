@@ -1,16 +1,14 @@
-{ pkgs, ...}:
-
-let
+{pkgs, ...}: let
   ethtool = "${pkgs.ethtool}/bin/ethtool";
-  rg      = "${pkgs.ripgrep}/bin/rg";
-  wc      = "/run/current-system/sw/bin/wc";
+  rg = "${pkgs.ripgrep}/bin/rg";
+  wc = "/run/current-system/sw/bin/wc";
 
   # Tongfang
-  eth1  = "eno1";
+  eth1 = "eno1";
   wifi1 = "wlp1s0";
 
   # Dell XPS
-  eth2  = "eno0";
+  eth2 = "eno0";
   wifi2 = "wlp0s20f3";
 in
   pkgs.writeShellScriptBin "check-network" ''

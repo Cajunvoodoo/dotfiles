@@ -1,6 +1,8 @@
-{ config, pkgs, ...}:
-
 {
+  config,
+  pkgs,
+  ...
+}: {
   environment.systemPackages = with pkgs; [
     udevil
   ];
@@ -10,6 +12,6 @@
   systemd.user.services.devmon = {
     enable = true;
     reloadIfChanged = true;
-    wantedBy = pkgs.lib.mkForce [ "default.target" ];
+    wantedBy = pkgs.lib.mkForce ["default.target"];
   };
 }

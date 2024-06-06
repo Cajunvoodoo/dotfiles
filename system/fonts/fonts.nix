@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   fonts = {
     enableDefaultPackages = true;
     packages = with pkgs; [
@@ -15,12 +13,12 @@
       noto-fonts-cjk
       siji
       ubuntu_font_family
- ];
+    ];
 
     fontconfig = {
       enable = true;
       defaultFonts = {
-        monospace = [ "Fira Code" ];
+        monospace = ["Fira Code"];
       };
     };
   };

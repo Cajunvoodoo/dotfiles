@@ -1,17 +1,19 @@
-{ config, ... }:
-
 {
-  imports =
-    [
-      <agenix/modules/age.nix>
-      # ../agenix/secrets.nix
-    ];
+  inputs,
+  config,
+  ...
+}: {
+  # imports =
+  #   [
+  #     <agenix/modules/age.nix>
+  #     # ../agenix/secrets.nix
+  #   ];
 
-  nixpkgs.config.packageOverrides = pkgs: rec {
-    wpa_supplicant = pkgs.wpa_supplicant.overrideAttrs (attrs: {
-      patches = attrs.patches ++ [ ./eduroam.patch ];
-    });
-  };
+  # nixpkgs.config.packageOverrides = pkgs: rec {
+  #   wpa_supplicant = pkgs.wpa_supplicant.overrideAttrs (attrs: {
+  #     patches = attrs.patches ++ [ ./eduroam.patch ];
+  #   });
+  # };
 
   networking = {
     networkmanager.enable = true;
@@ -45,7 +47,6 @@
         };
       };
     };
-
 
     hostName = "cajun";
   };

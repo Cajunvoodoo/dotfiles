@@ -1,6 +1,4 @@
-{pkgs, ...}:
-
-{
+{pkgs, ...}: {
   imports = [
     #./textEditors/neovim.nix
     #./textEditors/emacs/main.nix
@@ -9,7 +7,7 @@
   ];
   xdg.userDirs.enable = true;
   home.homeDirectory = "/home/cajun";
-  home = { stateVersion = "23.05"; };
+  home = {stateVersion = "23.05";};
 
   fonts.fontconfig = {
     enable = true;
@@ -28,29 +26,29 @@
     };
   };
 
-#  home.file = {
-#    eww = {
-#      source = ./other/eww;
-#      recursive = true;
-#      target = "./.config/eww/";
-#    };
-#
-#  };
+  #  home.file = {
+  #    eww = {
+  #      source = ./other/eww;
+  #      recursive = true;
+  #      target = "./.config/eww/";
+  #    };
+  #
+  #  };
 
   programs.wezterm = {
     enable = true;
-#    settings = {
-#      main = {
-#        term = "xterm-256color";
-#        font = "Iosevka:size=14";
-#        dpi-aware = "yes";
-#      };
-#      mouse = {
-#        hide-when-typing = "yes";
-#                        };
-#                        colors = {
-#                          background = "0x282a36";
-#                        };
-#    };
+    #    settings = {
+    #      main = {
+    #        term = "xterm-256color";
+    #        font = "Iosevka:size=14";
+    #        dpi-aware = "yes";
+    #      };
+    #      mouse = {
+    #        hide-when-typing = "yes";
+    #                        };
+    #                        colors = {
+    #                          background = "0x282a36";
+    #                        };
+    #    };
   };
 }

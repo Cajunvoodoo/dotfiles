@@ -1,26 +1,28 @@
-{ config, pkgs, lib, ...}:
-
-let
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
   fzf = {
     name = "fzf";
     src = pkgs.fetchFromGitHub {
-      owner  = "PatrickF1";
-      repo   = "fzf.fish";
-      rev    = "refs/tags/v9.9";
+      owner = "PatrickF1";
+      repo = "fzf.fish";
+      rev = "refs/tags/v9.9";
       sha256 = "Aqr6+DcOS3U1R8o9Mlbxszo5/Dy9viU4KbmRGXo95R8=";
     };
   };
   theme-dmorrell = {
     name = "theme-dmorrell";
     src = pkgs.fetchFromGitHub {
-      owner  = "reitzig";
-      repo   = "theme-dmorrell";
-      rev    = "9c3bad91e8ee59a4616491fe5af199519420a718";
+      owner = "reitzig";
+      repo = "theme-dmorrell";
+      rev = "9c3bad91e8ee59a4616491fe5af199519420a718";
       sha256 = "QQtsgf6sQwb0I92I8LQGhkLEZlloURDiOa+oBgnphd0=";
     };
   };
-in
-{
+in {
   #import the fish dependencies
   imports = [
     ./fd/default.nix
@@ -28,7 +30,9 @@ in
     ./fzf/default.nix
   ];
 
-  home.packages = [ pkgs.oh-my-fish ];
+  home.packages = [
+    pkgs.oh-my-fish
+  ];
 
   programs.fish = {
     enable = true;
@@ -39,7 +43,14 @@ in
     ];
 
     shellAliases = {
-      rebuild = "rm -f ~/.gtkrc-2.0 ~/.config/gtk-4.0/settings.ini ~/.config/gtk-4.0/gtk.css ~/.config/gtk-3.0/settings.ini ~/.xmonad/xmonad-x86_64-linux && sudo nixos-rebuild switch";
+      rebuild = ''
+        cd ~/dotfiles
+        rm -f ~/.gtkrc-2.0 ~/.config/gtk-4.0/settings.ini ~/.config/gtk-4.0/gtk.css ~/.config/gtk-3.0/settings.ini ~/.xmonad/xmonad-x86_64-linux
+        nix fmt
+        sudo nixos-rebuild switch --flake /home/cajun/dotfiles/ --impure
+        git --no-pager diff -U0 --color '*.nix'
+        cd -
+      '';
     };
 
     interactiveShellInit = ''
@@ -68,6 +79,16 @@ in
 
       # Working on windows systems results in bad habits
       abbr --add ipconfig ifconfig
+
+      # Connect to nordvpn, using wgnord and a secret accessed via sudo
+      alias nord-login="sudo wgnord l (cat /run/agenix/nordvpn-token)"
+      # FIXME: agenix bullshit, nix flake bullshit, home-manager bullshit, this is hell
+
+      alias nord-connect='sudo wgnord c (cat /run/agenix/nordvpn-token)'
+
+      alias nord-login-and-connect="nord-login; nord-connect"
+
+      set EDITOR emacs
     '';
   };
 }

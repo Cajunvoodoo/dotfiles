@@ -1,6 +1,8 @@
-{ pkgs, config, ... }:
-
-let
+{
+  pkgs,
+  config,
+  ...
+}: let
   extra = ''
     set +x
     ${pkgs.util-linux}/bin/setterm -blank 0 -powersave off -powerdown 0
@@ -13,19 +15,17 @@ let
     ${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable --indicator &
   '';
   #TODO: add xcape to the above
-in
+in {
+  home.packages = with pkgs; [
+    dialog # Dialog boxes on the terminal (to show key bindings)
+    networkmanager_dmenu # networkmanager on dmenu
+    xcape # keymaps modifier
+    xorg.xkbcomp # keymaps modifier
+    xorg.xmodmap # keymaps modifier
+    xorg.xrandr # display manager (X Resize and Rotate protocol)
+  ];
 
-{
-   home.packages = with pkgs; [
-    dialog                 # Dialog boxes on the terminal (to show key bindings)
-    networkmanager_dmenu   # networkmanager on dmenu
-    xcape                  # keymaps modifier
-    xorg.xkbcomp           # keymaps modifier
-    xorg.xmodmap           # keymaps modifier
-    xorg.xrandr            # display manager (X Resize and Rotate protocol)
-   ];
-
-   xresources.properties = {
+  xresources.properties = {
     #"Xft.dpi" = 180;
     "Xft.autohint" = 0;
     "Xft.hintstyle" = "hintfull";

@@ -1,9 +1,12 @@
-{ config, pkgs, specialArgs, ... }:
-
-let
+{
+  config,
+  pkgs,
+  specialArgs,
+  ...
+}: let
   openCalendar = "${pkgs.xfce.orage}/bin/orage";
 
-  hdmiBar = pkgs.callPackage ./bar.nix { };
+  hdmiBar = pkgs.callPackage ./bar.nix {};
 
   laptopBar = pkgs.callPackage ./bar.nix {
     font0 = 10;
@@ -19,23 +22,23 @@ let
   openGithub = "${pkgs.firefox}/bin/firefox -new-tab github.com/notifications";
 
   mypolybar = pkgs.polybar.override {
-    alsaSupport   = true;
+    alsaSupport = true;
     githubSupport = true;
-    mpdSupport    = true;
-    pulseSupport  = true;
+    mpdSupport = true;
+    pulseSupport = true;
   };
 
   # theme adapted from: https://github.com/adi1090x/polybar-themes#-polybar-5
-  bars   = builtins.readFile ./bars.ini;
+  bars = builtins.readFile ./bars.ini;
   colors = builtins.readFile ./colors.ini;
-  mods1  = builtins.readFile ./modules.ini;
-  mods2  = builtins.readFile ./user_modules.ini;
+  mods1 = builtins.readFile ./modules.ini;
+  mods2 = builtins.readFile ./user_modules.ini;
 
   bluetoothScript = pkgs.callPackage ./scripts/bluetooth.nix {};
-  klsScript       = pkgs.callPackage ../../scripts/keyboard-layout-switch.nix { inherit pkgs; };
-  monitorScript   = pkgs.callPackage ./scripts/monitor.nix {};
-  mprisScript     = pkgs.callPackage ./scripts/mpris.nix {};
-  networkScript   = pkgs.callPackage ./scripts/network.nix {};
+  klsScript = pkgs.callPackage ../../scripts/keyboard-layout-switch.nix {inherit pkgs;};
+  monitorScript = pkgs.callPackage ./scripts/monitor.nix {};
+  mprisScript = pkgs.callPackage ./scripts/mpris.nix {};
+  networkScript = pkgs.callPackage ./scripts/network.nix {};
 
   bctl = ''
     [module/bctl]
@@ -82,12 +85,11 @@ let
   '';
 
   customMods = mainBar + bctl + cal + github + mpris + xmonad;
-in
-{
+in {
   home.packages = with pkgs; [
     #font-awesome          # awesome fonts
     material-design-icons # fonts with glyphs
-    xfce.orage            # lightweight calendar
+    xfce.orage # lightweight calendar
   ];
 
   services.polybar = {

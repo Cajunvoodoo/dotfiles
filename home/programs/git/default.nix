@@ -1,9 +1,9 @@
-{ config, pkgs, ...}:
-
 {
-  home.file.".ssh/allowed_signers".text =
-    "* ${builtins.readFile /home/cajun/.ssh/github_cajun_signing.pub}";
-
+  config,
+  pkgs,
+  ...
+}: {
+  home.file.".ssh/allowed_signers".text = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILW6BE298UYhCRPh5nkCsWfAuDlouCoZE83JRR80dEan Cajunvoodoo GitHub Signing Key";
   programs.git = {
     enable = true;
     package = pkgs.gitAndTools.gitFull;

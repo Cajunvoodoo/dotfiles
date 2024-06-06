@@ -6,7 +6,7 @@
     backend = "xrender";
     fade = true;
     fadeDelta = 1;
-    opacityRules = [ "100:name *= 'i3lock'" ];
+    opacityRules = ["100:name *= 'i3lock'"];
     shadow = true;
     shadowOpacity = 0.75;
   };
