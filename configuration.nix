@@ -182,6 +182,9 @@ in {
       minigalaxy
 
       wgnord # nordvpn
+      lutris
+      # heroic
+      # gogdl
     ];
   };
 
@@ -288,6 +291,15 @@ in {
     jetbrains.idea-ultimate
     jetbrains.jdk
     # graalvm11-ce
+    (jetbrains.rider.overrideAttrs (attrs: {
+      nativeBuildInputs =
+        jetbrains.rider.nativeBuildInputs
+        ++ [
+          icu
+          pkgconf
+        ];
+    }))
+    icu # requirement for dotnet & rider
     # jdk11
     fontconfig
     # python3

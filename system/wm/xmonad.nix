@@ -16,6 +16,7 @@
 
     displayManager = {
       defaultSession = "none+xmonad";
+      # TODO: ssdm theming
       sddm.enable = true;
     };
 

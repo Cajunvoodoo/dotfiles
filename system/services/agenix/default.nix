@@ -39,6 +39,13 @@
     owner = "cajun";
   };
 
+  # age.secrets.spotify = {
+  #   file = ./secrets/spotify.age;
+  #   owner = "cajun";
+  #   group = "users";
+  #   mode = "770";
+  # };
+
   # Binary Ninja tar file, to avoid leaking it to the public
   # age.secrets."binary-ninja.tar.gz" = {
   #   file = ./secrets/binary-ninja.tar.gz.age;

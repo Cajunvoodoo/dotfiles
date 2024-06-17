@@ -16,6 +16,8 @@ in {
   "rmfakecloud-https.crt.age".publicKeys = [cajun];
 
   "nordvpn-token.age".publicKeys = [cajun];
+
+  # "spotify.age".publicKeys = [cajun];
   # "binary-ninja.tar.gz.age".publicKeys = [cajun];
   # "rcu.tar.gz.age".publicKeys = [cajun];
 }

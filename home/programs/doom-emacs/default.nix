@@ -13,7 +13,8 @@
 
   programs.emacs = {
     enable = true;
-    package = pkgs.emacs-gtk;
+    # package = pkgs.emacs-gtk;
+    package = pkgs.emacs-unstable;
     extraPackages = epkgs: [
       epkgs.vterm
       epkgs.irony
@@ -40,6 +41,9 @@
     ## Doom dependencies
     (ripgrep.override {withPCRE2 = true;})
     gnutls
+
+    # Performance booster
+    emacs-lsp-booster
 
     ## Treemacs
     python3

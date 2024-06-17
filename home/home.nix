@@ -1,10 +1,18 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  inputs,
+  ...
+}: {
   imports = [
     #./textEditors/neovim.nix
     #./textEditors/emacs/main.nix
     ./programs/programs.nix
     ./services/services.nix
   ];
+
+  # nixpkgs.overlays =
+  #   inputs.emacs-overlay.overlays;
+
   xdg.userDirs.enable = true;
   home.homeDirectory = "/home/cajun";
   home = {stateVersion = "23.05";};

@@ -13,6 +13,11 @@
       url = "github:ryantm/agenix";
       # follows = "nixpkgs";
     };
+
+    emacs-overlay = {
+      url = "github:nix-community/emacs-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -63,6 +68,9 @@
                 });
               };
             };
+            overlays = [
+              inputs.emacs-overlay.overlay
+            ];
           };
           specialArgs = {inherit inputs;};
           # extraSpecialArgs = {inherit inputs;};
