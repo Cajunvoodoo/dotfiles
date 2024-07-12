@@ -89,6 +89,7 @@ in {
       alias nord-login-and-connect="nord-login; nord-connect"
 
       set EDITOR emacs
+      set PAGER moar
     '';
   };
 }

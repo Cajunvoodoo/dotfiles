@@ -173,18 +173,15 @@ in {
 
       pwndbg
 
-      rmfakecloud
-
-      nixfmt-rfc-style
-
       steam-run
 
       minigalaxy
+      lutris # GoG Games
 
-      wgnord # nordvpn
-      lutris
-      # heroic
-      # gogdl
+      moar # better pager
+      procs # better ps
+
+      pavucontrol # Audio control (I hate linux)
     ];
   };
 
