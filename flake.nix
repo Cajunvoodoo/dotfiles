@@ -18,6 +18,11 @@
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    cajun-wallpaper-tool = {
+      url = "github:cajunvoodoo/wallpaper-tool";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {

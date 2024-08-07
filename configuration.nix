@@ -59,6 +59,9 @@ in {
   documentation.nixos.enable = true;
   documentation.man.generateCaches = false;
 
+  # Use the latest kernel version
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   # Enables NixOS to compile and run software for these systems using
   # qemu emulation.
   # TODO: add packages that are useful (e.g. the dynamic loaders, other such things)
@@ -86,7 +89,7 @@ in {
   # networking.hostName = "cajun"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.wireguard.enable = true;
-  services.tailscale.enable = true;
+  services.tailscale.enable = false; # Currently disabled to save battery life (too many wakeups per second)
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -182,14 +185,42 @@ in {
       procs # better ps
 
       pavucontrol # Audio control (I hate linux)
+
+      inetutils # Why isn't this installed by default??
+      p7zip
+
+      signal-desktop
     ];
   };
 
-  services.xrdp = {
-    enable = true;
-    defaultWindowManager = "xmonad";
-    openFirewall = true;
+  systemd.timers."wallpaper-tool" = {
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnCalendar = "*-*-1 00:00:00";
+      AccuracySec = "1h";
+      Persistent = true;
+      Unit = "wallpaper-tool.service";
+    };
   };
+
+  systemd.services."wallpaper-tool" = {
+    script = ''
+      set -eu
+      ${inputs.cajun-wallpaper-tool}/bin/cajun-kriegs-wallpaper cajun
+      ${pkgs.feh}/bin/feh --bg-scale ${config.users.users.cajun.home}/Pictures/wallpaper.jpg
+    '';
+
+    serviceConfig = {
+      Type = "oneshot";
+      User = "cajun";
+    };
+  };
+
+  # services.xrdp = {
+  #   enable = true;
+  #   defaultWindowManager = "xmonad";
+  #   openFirewall = true;
+  # };
 
   # Dynamic loader assistance for pre-build binaries
   programs.nix-ld = {

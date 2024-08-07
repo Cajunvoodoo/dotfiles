@@ -22,6 +22,7 @@
 
     xserver = {
       enable = true;
+      autoRepeatDelay = 250; # 250ms is roughly equal to the shortest Windows delay
 
       #extraLayouts.us-custom = {
       #description = "US layout with custom hyper keys";
