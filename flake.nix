@@ -23,6 +23,11 @@
       url = "github:cajunvoodoo/wallpaper-tool";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    xmobar-cajun = {
+      url = "github:cajunvoodoo/xmobar-cajun";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -67,10 +72,8 @@
 
             config = {
               allowUnfree = true;
-              packageOverrides = pkgs: rec {
-                wpa_supplicant = pkgs.wpa_supplicant.overrideAttrs (attrs: {
-                  patches = attrs.patches ++ [./system/services/wpa-supplicant/eduroam.patch];
-                });
+              packageOverrides = pkgs: {
+                # "package" = pkgs."package".overrideAttrs (attrs: {...})
               };
             };
             overlays = [

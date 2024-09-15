@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  inputs,
   ...
 }: let
   extra = ''
@@ -23,6 +24,15 @@ in {
     xorg.xkbcomp # keymaps modifier
     xorg.xmodmap # keymaps modifier
     xorg.xrandr # display manager (X Resize and Rotate protocol)
+    trayer
+    xmobar
+    kitty
+    dmenu
+    playerctl
+    inputs.xmobar-cajun.packages.${pkgs.system}.default
+    hack-font
+    hackgen-nf-font
+    hackgen-font
   ];
 
   xresources.properties = {
@@ -44,11 +54,31 @@ in {
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;
-      extraPackages = hp: [
-        hp.dbus
-        hp.monad-logger
-      ];
-      config = ./config.hs;
+      extraPackages = hp:
+        with hp; [
+          aeson
+          async
+          bytestring
+          dbus
+          hinotify
+          http-conduit
+          monad-logger
+          stm
+          text
+          xmobar
+        ];
+      libFiles = {
+        # "Monitors.hs" = ./Monitors.hs;
+        # "Single.hs" = ./Single.hs;
+        # "Config.hs" = ./Config.hs;
+        "xmobars.sh" = ./xmobars.sh;
+      };
+      config = ./xmonad.hs;
     };
   };
+  # home.file = {
+  #   ".config/xmobar/xmobar.hs".source = ./Single.hs;
+  #   ".config/xmobar/Config.hs".source = ./Config.hs;
+  #   ".config/xmobar/Monitors.hs".source = ./Monitors.hs;
+  # };
 }

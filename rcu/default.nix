@@ -7,7 +7,8 @@
   makeDesktopItem,
   ...
 }: let
-  rcuPath = /nix/store/8q5pmijs71cxyqr2764nsn5i8hfnnlnw-rcu-d2024.001o-fedora38.tar.gz;
+  rcuPath = /nix/store/whsc5x7qgv4c2k4473snrklcqrjhllgl-rcu-d2024.001q-fedora38.tar.gz;
+  # NOTE: files can be found here: https://files.davisr.me/projects/rcu/download-59ck3sdT/develop/rcu-d2024.001q-fedora38.tar.gz
 in
   stdenv.mkDerivation rec {
     name = "rcu";

@@ -61,6 +61,8 @@ in {
 
   # Use the latest kernel version
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  # Deal with the consequences of using the latest kernel
+  boot.crashDump.enable = true;
 
   # Enables NixOS to compile and run software for these systems using
   # qemu emulation.
@@ -130,7 +132,7 @@ in {
   };
 
   # Enable sound with pipewire.
-  sound.enable = true;
+  # sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -185,11 +187,14 @@ in {
       procs # better ps
 
       pavucontrol # Audio control (I hate linux)
+      alsa-utils
 
       inetutils # Why isn't this installed by default??
       p7zip
 
       signal-desktop
+
+      remmina
     ];
   };
 
@@ -213,6 +218,8 @@ in {
     serviceConfig = {
       Type = "oneshot";
       User = "cajun";
+      Group = "cajun";
+      ProtectHome = "off";
     };
   };
 

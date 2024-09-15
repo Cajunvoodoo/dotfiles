@@ -34,7 +34,7 @@
     #(epkgs: [ epkgs.vterm ]))
     #cmake
 
-    emacsPackages.agda-input
+    # emacsPackages.agda-input
     emacsPackages.agda2-mode
     emacsPackages.agda-editor-tactics
 

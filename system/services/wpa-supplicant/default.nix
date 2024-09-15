@@ -17,34 +17,17 @@
 
   networking = {
     networkmanager.enable = true;
-
     wireless = {
+      extraConfig = ''
+        openssl_ciphers=DEFAULT@SECLEVEL=0
+      '';
+
       enable = false;
       userControlled.enable = true;
 
       environmentFile = config.age.secrets.nuwave.path;
 
       networks = {
-        "NUwave" = {
-          hidden = false;
-
-          auth = ''
-            key_mgmt=WPA-EAP
-            eap=PEAP
-            phase1="peaplabel=0"
-            phase2="auth=MSCHAPV2"
-            identity="dwyer.t"
-            password="@password@"
-          '';
-        };
-
-        "bruh" = {
-          hidden = false;
-
-          auth = ''
-            a
-          '';
-        };
       };
     };
 

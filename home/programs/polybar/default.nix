@@ -93,7 +93,7 @@ in {
   ];
 
   services.polybar = {
-    enable = true;
+    enable = false;
     package = mypolybar;
     config = ./config.ini;
     extraConfig = bars + colors + mods1 + mods2 + customMods;
