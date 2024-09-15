@@ -20,25 +20,19 @@
       sddm.enable = true;
     };
 
+    libinput = {
+      enable = true;
+      touchpad = {
+        disableWhileTyping = true;
+        naturalScrolling = true;
+      };
+    };
+
     xserver = {
       enable = true;
       autoRepeatDelay = 250; # 250ms is roughly equal to the shortest Windows delay
 
-      #extraLayouts.us-custom = {
-      #description = "US layout with custom hyper keys";
-      #languages   = [ "eng" ];
-      #symbolsFile = ./us-custom.xkb;
-      #};
-
       videoDrivers = ["nvidia"];
-
-      libinput = {
-        enable = true;
-        touchpad = {
-          disableWhileTyping = true;
-          naturalScrolling = true;
-        };
-      };
 
       serverLayoutSection = ''
         Option "StandbyTime" "0"
@@ -90,10 +84,10 @@
     };
   };
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
     # driSupport = true;
-    driSupport32Bit = true;
+    enable32Bit = true;
     extraPackages = with pkgs; [
       vaapiIntel
       vaapiVdpau

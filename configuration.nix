@@ -192,9 +192,11 @@ in {
       inetutils # Why isn't this installed by default??
       p7zip
 
-      signal-desktop
+      signal-desktop # Always out of date :3
 
-      remmina
+      remmina # RDP
+
+      # TODO: disable camera, virtualization
     ];
   };
 

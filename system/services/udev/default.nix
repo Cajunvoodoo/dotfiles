@@ -10,9 +10,10 @@
   # Adds a udev rule allowing users in the video group to modify backlight
   programs.light.enable = true;
 
-  # services.udev.extraRules = ''
-  #   ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="acpi_video0", MODE="0666", RUN+="${pkgs.coreutils}/bin/chmod a+w /sys/class/backlight/%k/brightness"
-  # '';
+  # Disable laptop's camera, which hogs battery/power
+  services.udev.extraRules = ''
+    SUBSYSTEM=="usb", ATTR{idVendor}=="5986", ATTR{idProduct}=="9102", ATTR{authorized}="0"
+  '';
 
   environment.systemPackages = with pkgs; [
     brightnessctl
