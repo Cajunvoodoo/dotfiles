@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   config.services.postgresql = {
-    enable = true;
+    enable = false;
     enableTCPIP = true;
 
     ensureDatabases = ["backend"];

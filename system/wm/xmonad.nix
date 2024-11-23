@@ -66,10 +66,19 @@
 
   systemd.services.upower.enable = true;
 
+  hardware.opengl = {
+    enable = true;
+  };
+
+  boot.initrd.kernelModules = ["nvidia"];
+
   hardware.nvidia = {
     modesetting.enable = true;
-    powerManagement.enable = true;
-    open = false;
+    powerManagement = {
+      enable = false;
+      finegrained = true;
+    };
+    open = true;
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
 

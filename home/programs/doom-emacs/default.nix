@@ -14,7 +14,7 @@
   programs.emacs = {
     enable = true;
     # package = pkgs.emacs-gtk;
-    package = pkgs.emacs-unstable;
+    # package = pkgs.emacs-unstable;
     extraPackages = epkgs: [
       epkgs.vterm
       epkgs.irony
@@ -23,9 +23,25 @@
   };
 
   # Enable Emacs daemon
-  #services.emacs.enable = true;
+  services.emacs = {
+    enable = true;
+    startWithUserSession = "graphical";
+    socketActivation.enable = true;
+    # defaultEditor = true;
+    client = {
+      enable = true;
+    };
+  };
 
   home.packages = with pkgs; [
+    (writeShellApplication {
+      name = "ec";
+      runtimeInputs = [emacs];
+
+      text = ''
+        emacsclient -c
+      '';
+    })
     ## Emacs itself
     binutils
     coreutils
@@ -67,6 +83,7 @@
     xclip
     xdotool
     xorg.xwininfo
+    xorg.xprop
     # :lang cc
     # clang # moved to environment.systemPackages
     # clang-tools

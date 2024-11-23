@@ -18,7 +18,7 @@
   libXcursor,
   # , binary-ninja-path
 }: let
-  binaryNinjaPath = /nix/store/c900w7fnh6qrg53h7c1qyxlqyggp5w9i-binaryninja_personal_dev_linux.zip;
+  binaryNinjaPath = /nix/store/g9d1awjlz6kvm6y7rdfhzbn0jdix2fbs-binaryninja_personal_dev_linux.zip; # /nix/store/c900w7fnh6qrg53h7c1qyxlqyggp5w9i-binaryninja_personal_dev_linux.zip;
 in
   stdenv.mkDerivation rec {
     version = "4.1.5129";
@@ -51,7 +51,10 @@ in
     ];
 
     propagatedBuildInputs = [
-      python3
+      (python3.withPackages (pypkgs:
+        with pypkgs; [
+          z3-solver
+        ]))
     ];
 
     desktopItems = [

@@ -82,6 +82,7 @@ myKeybindings conf@XConfig {XMonad.modMask = modm} =
   keySet "Launchers"
     [ -- key "Terminal"      (modm .|. shiftMask  , xK_Return  ) $ spawn (XMonad.terminal conf)
     -- , key "Lock screen"   (modm .|. controlMask, xK_l       ) $ spawn screenLocker
+      key "Emacs Everywhere"    (modm, xK_grave) $ spawn "emacsclient --eval '(emacs-everywhere)'"
     ] ^++^
   keySet "Layouts"
     [ key "Next"          (modm              , xK_space     ) $ sendMessage NextLayout
@@ -113,6 +114,7 @@ myLayout = avoidStrutsOn [U] (tiled ||| Mirror tiled ||| Full ||| threeCol)
 myXmobarPP :: PP
 myXmobarPP = def
     { ppSep             = magenta " • "
+    , ppTitle           = shorten 25
     , ppTitleSanitize   = xmobarStrip
     , ppCurrent         = wrap " " "" . xmobarBorder "Top" "#8be9fd" 2
     , ppHidden          = white . wrap " " ""

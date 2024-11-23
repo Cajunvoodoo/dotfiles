@@ -57,7 +57,17 @@ in {
       source ${theme-dmorrell.src}/fish_prompt.fish
       source ${theme-dmorrell.src}/fish_right_prompt.fish
       fish_add_path ${config.xdg.configHome}/emacs/bin
+      ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
+
+      function ec
+        emacsclient --create-frame $argv &
+      end
+
       set -g fish_greeting
+
+      abbr --add envrc direnv
+
+      abbr --add r direnv reload
 
       # Mutli-cd, from the fish documentation.
       # Transforms multiple pairs of `..` into `cd ../`, so .. = 1 dir back,

@@ -6,12 +6,13 @@
   variables,
   config,
   pkgs,
+  lib,
   ...
 }: let
   # nix-gaming = import (builtins.fetchTarball "https://github.com/fufexan/nix-gaming/archive/master.tar.gz");
   # nh = import (builtins.fetchTarball "https://github.com/viperML/nh/archive/master.tar.gz");
   # nixd = import (builtins.fetchTarball "https://github.com/nix-community/nixd/archive/refs/tags/2.0.2.tar.gz");
-  xmonad-config = (import /home/cajun/Projects/Haskell/xmonad-flake).nixosModules;
+  # xmonad-config = (import /home/cajun/Projects/Haskell/xmonad-flake).nixosModules;
 in {
   imports = [
     #include system configuration, which does not rely on home-manager
@@ -49,7 +50,6 @@ in {
       # "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
       "nixpkgs=${inputs.nixpkgs}" # FLAKE, NIXD
       #FIXME: make this dependent on a variable instead of strictly cajun
-      "nixos-config=/home/cajun/dotfiles/configuration.nix"
       "/nix/var/nix/profiles/per-user/root/channels"
     ];
   };
@@ -61,8 +61,9 @@ in {
 
   # Use the latest kernel version
   boot.kernelPackages = pkgs.linuxPackages_latest;
+
   # Deal with the consequences of using the latest kernel
-  boot.crashDump.enable = true;
+  # boot.crashDump.enable = true;
 
   # Enables NixOS to compile and run software for these systems using
   # qemu emulation.
@@ -91,7 +92,24 @@ in {
   # networking.hostName = "cajun"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.wireguard.enable = true;
-  services.tailscale.enable = false; # Currently disabled to save battery life (too many wakeups per second)
+
+  # required for MagicDNS to work
+  services.resolved.enable = true;
+  systemd.network.wait-online.enable = false;
+  systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
+  services.tailscale = {
+    enable = true; # Currently disabled to save battery life (too many wakeups per second)
+    openFirewall = true;
+    useRoutingFeatures = "both";
+  };
+
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = false;
+      AllowUsers = ["cajun"];
+    };
+  };
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -123,7 +141,7 @@ in {
   environment.shells = [pkgs.bashInteractive pkgs.fish];
 
   # Enable CUPS to print documents.
-  services.printing.enable = true;
+  services.printing.enable = false;
 
   services.avahi = {
     enable = true;
@@ -159,8 +177,12 @@ in {
   users.users.cajun = {
     isNormalUser = true;
     description = "cajun";
-    extraGroups = ["networkmanager" "wheel" "video"];
+    extraGroups = ["networkmanager" "wheel" "video" "xrdp"];
     shell = pkgs.fish;
+
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINmvR3ySxKdlez065jxyzz1eCK5BOuljTJaiAB7rVz9f windows desktop"
+    ];
     packages = with pkgs; [
       firefox
       fish
@@ -175,6 +197,10 @@ in {
       nix-output-monitor
       busybox
       toybox
+
+      units
+
+      # vmware-workstation
 
       pwndbg
 
@@ -196,9 +222,26 @@ in {
 
       remmina # RDP
 
-      # TODO: disable camera, virtualization
+      # gnuradio
+      arandr # you know why
+      htop
+      ncdu
+
+      tailscale
+      openvpn
+
+      wgnord
     ];
   };
+
+  services.xrdp = {
+    enable = true;
+    openFirewall = true;
+    defaultWindowManager = "xmonad";
+    audio.enable = true;
+  };
+
+  # programs.openvpn3.enable = true;
 
   systemd.timers."wallpaper-tool" = {
     wantedBy = ["timers.target"];
@@ -224,12 +267,6 @@ in {
       ProtectHome = "off";
     };
   };
-
-  # services.xrdp = {
-  #   enable = true;
-  #   defaultWindowManager = "xmonad";
-  #   openFirewall = true;
-  # };
 
   # Dynamic loader assistance for pre-build binaries
   programs.nix-ld = {
@@ -263,27 +300,6 @@ in {
     # ];
   };
 
-  # systemd.services.rmfakecloud = {
-  #   enable = false;
-  #   description = "Fake cloud service for Remarkable devices";
-
-  #   unitConfig = {
-  #     Type = "simple";
-  #     After = [ "network-online.target" ];
-  #     Wants = [ "network-online.target" ];
-  #   };
-
-  #   serviceConfig = {
-  #     ExecStart = "${pkgs.rmfakecloud}/bin/rmfakecloud";
-  #     EnvironmentFile = config.age.secrets.rmfakecloud-env.path;
-  #   };
-
-  #   wantedBy = [ "multi-user.target" ];
-  # };
-
-  #configure home-manager for cajun
-  # home-manager.users.cajun = import ./home/home.nix;
-
   # Allow unfree packages
   # nixpkgs.config.allowUnfree = true;
   # Allow broken packages
@@ -298,8 +314,8 @@ in {
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
-    system76-firmware
-    system76-keyboard-configurator
+    # system76-firmware
+    # system76-keyboard-configurator
     dmenu
     # SOLUTION: write a function that just runs it normally, rather than making
     # a new default.nix and whatnot
@@ -307,9 +323,14 @@ in {
       #rcu-tar-path = config.age.secrets."rcu.tar.gz".path;
     })
 
-    (callPackage ./binaryninja {
-      #binary-ninja-path = config.age.secrets."binary-ninja.tar.gz".file;
-    })
+    (callPackage ./binaryninja.nix {})
+
+    # (callPackage ./binaryninja {
+    #   #binary-ninja-path = config.age.secrets."binary-ninja.tar.gz".file;
+    # })
+    # (inputs.binary-ninja.packages.${pkgs.system}.binary-ninja-personal.overrideAttrs (old: {
+    #   src = /nix/store/a0hgfba2ppclbvshv1rwgjraikspa17q-binary-linux-personal.zip;
+    # }))
     #
     steam-run
     wireshark
@@ -325,17 +346,17 @@ in {
     man-pages
     man-pages-posix
 
-    jetbrains.idea-ultimate
-    jetbrains.jdk
+    # jetbrains.idea-ultimate
+    # jetbrains.jdk
     # graalvm11-ce
-    (jetbrains.rider.overrideAttrs (attrs: {
-      nativeBuildInputs =
-        jetbrains.rider.nativeBuildInputs
-        ++ [
-          icu
-          pkgconf
-        ];
-    }))
+    # (jetbrains.rider.overrideAttrs (attrs: {
+    #   nativeBuildInputs =
+    #     jetbrains.rider.nativeBuildInputs
+    #     ++ [
+    #       icu
+    #       pkgconf
+    #     ];
+    # }))
     icu # requirement for dotnet & rider
     # jdk11
     fontconfig
@@ -343,15 +364,13 @@ in {
     # nix-gaming.packages.${pkgs.hostPlatform.system}.proton-ge
     #haskell.packages.ghc92.ghc
   ];
-  virtualisation.spiceUSBRedirection.enable = true;
 
-  # FIXME: move the identityfile stuff into home manager, as this prevents multi-user installs and requires those files exist on each machine
+  virtualisation.spiceUSBRedirection.enable = true;
+  # virtualisation.vmware.host.enable = true;
+
   programs.ssh = {
     startAgent = true;
     extraConfig = ''
-      IdentityFile ~/.ssh/hacker96
-      IdentityFile ~/.ssh/desktop_ed25519
-      IdentityFile ~/.ssh/id_ed25519
     '';
   };
   # security.wrappers.spice-client-glib-usb-acl-helper.source = "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";

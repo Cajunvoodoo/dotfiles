@@ -4,6 +4,7 @@
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
     # cajun-xmonad = "file:///home/cajun/Projects/Haskell/xmonad-flake";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -27,6 +28,10 @@
     xmobar-cajun = {
       url = "github:cajunvoodoo/xmobar-cajun";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    binary-ninja = {
+      url = "github:jchv/nix-binary-ninja";
     };
   };
 
@@ -77,13 +82,14 @@
               };
             };
             overlays = [
-              inputs.emacs-overlay.overlay
+              # inputs.emacs-overlay.overlay -- breaks doom on 30.??
             ];
           };
           specialArgs = {inherit inputs;};
           # extraSpecialArgs = {inherit inputs;};
           modules = [
             ./configuration.nix
+            # inputs.nixos-hardware.nixosModules.system76-gaze18
             # agenix
             # agenix.nixosModules.default
             # home manager

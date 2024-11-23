@@ -25,7 +25,7 @@
       enable = false;
       userControlled.enable = true;
 
-      environmentFile = config.age.secrets.nuwave.path;
+      secretsFile = config.age.secrets.nuwave.path;
 
       networks = {
       };
