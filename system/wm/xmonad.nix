@@ -66,10 +66,6 @@
 
   systemd.services.upower.enable = true;
 
-  hardware.opengl = {
-    enable = true;
-  };
-
   boot.initrd.kernelModules = ["nvidia"];
 
   hardware.nvidia = {
