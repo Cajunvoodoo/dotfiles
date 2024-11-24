@@ -237,7 +237,7 @@ in {
   services.xrdp = {
     enable = true;
     openFirewall = true;
-    defaultWindowManager = "xmonad";
+    defaultWindowManager = "~/.xsession";
     audio.enable = true;
   };
 
