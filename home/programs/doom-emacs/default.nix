@@ -19,6 +19,7 @@
       epkgs.vterm
       epkgs.irony
       epkgs.irony-eldoc
+      epkgs.git-commit
     ];
   };
 
@@ -97,8 +98,16 @@
     fira-code-symbols
     noto-fonts
     font-awesome
+    # iosevka
+    # iosevka-bin
+    iosevka-comfy.comfy-wide
+    # iosevka-comfy.comfy-wide-duo
+    # iosevka-comfy.comfy-wide-fixed
+    # iosevka-comfy.comfy-wide-motion
+    # iosevka-comfy.comfy-wide-motion-duo
+    # iosevka-comfy.comfy-wide-motion-fixed
     # modeline
-    nerdfonts
+    nerd-font-patcher
   ];
 
   fonts.fontconfig.enable = true;

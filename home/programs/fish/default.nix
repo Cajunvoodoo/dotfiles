@@ -69,6 +69,10 @@ in {
 
       abbr --add r direnv reload
 
+      abbr --add shell nix-shell -p
+
+      abbr --set-cursor=! --add logs "journalctl --since '! minutes ago' | moar"
+
       # Mutli-cd, from the fish documentation.
       # Transforms multiple pairs of `..` into `cd ../`, so .. = 1 dir back,
       # and progressive `.` add another dir (into another `/../`)

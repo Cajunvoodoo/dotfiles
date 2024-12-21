@@ -2,6 +2,8 @@
 module Main where
 import XMonad
 
+import XMonad.Actions.FloatKeys
+import XMonad.Actions.NoBorders
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
@@ -21,15 +23,17 @@ import XMonad.Layout.Magnifier
 import XMonad.Layout.ThreeColumns
 import XMonad.Layout.MultiToggle.Instances
 import qualified XMonad.Layout.MultiToggle as MT
+import qualified XMonad.StackSet as W
 
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
 import Graphics.X11.ExtraTypes.XF86
 import Control.Concurrent (forkIO)
 import Control.Monad (void)
-import Data.List (stripPrefix)
+import Data.List (stripPrefix, isPrefixOf)
 import Data.Maybe (fromMaybe)
 import System.IO
+import Data.Ratio ((%))
 
 
 main :: IO ()
@@ -38,11 +42,13 @@ main = do
   xmonad
     . ewmhFullscreen
     . ewmh
-    -- . withEasySB (statusBarProp "xmobar" (pure myXmobarPP)) defToggleStrutsKey
+    -- . withEasySB (statusBarPropTo "_XMONAD_LOG_1" "xmobar-single" (pure simplePP)) myToggleStrutsKey
     . myStatusBar
     . docks
     . addDescrKeys ((mod4Mask, xK_F1), unlines . showKmSimple) myKeybindings
     $ myConfig
+
+myToggleStrutsKey XConfig{modMask = modm} = (modm, xK_b)
 
 myConfig = def
     { modMask    = mod4Mask      -- Rebind Mod to the Super key
@@ -63,9 +69,10 @@ myConfig = def
     ]
 
 myStartupHook = do
-  spawn "/home/cajun/.xmonad/lib/xmobars.sh"
+  -- spawn "/home/cajun/.xmonad/lib/xmobars.sh"
+  spawn "ec" -- startup emacs as a client
 
-myStatusBar = SB.withSB $ SB.statusBarPropTo "_XMONAD_LOG_1" "xmobar" (pure simplePP)
+myStatusBar = SB.withSB $ SB.statusBarPropTo "_XMONAD_LOG_1" "xmobar-single" (pure simplePP)
 
 myKeybindings conf@XConfig {XMonad.modMask = modm} =
   keySet "Audio"
@@ -82,26 +89,54 @@ myKeybindings conf@XConfig {XMonad.modMask = modm} =
   keySet "Launchers"
     [ -- key "Terminal"      (modm .|. shiftMask  , xK_Return  ) $ spawn (XMonad.terminal conf)
     -- , key "Lock screen"   (modm .|. controlMask, xK_l       ) $ spawn screenLocker
-      key "Emacs Everywhere"    (modm, xK_grave) $ spawn "emacsclient --eval '(emacs-everywhere)'"
+      -- key "Emacsclient" (modm, xK_n) $ spawn "ec"
+      key "Network Manager (dmenu)" (modm, xK_n) $ spawn "networkmanager_dmenu"
+    , key "Emacs Everywhere"    (modm, xK_grave) $ spawn "emacsclient --eval '(emacs-everywhere)'"
     ] ^++^
   keySet "Layouts"
     [ key "Next"          (modm              , xK_space     ) $ sendMessage NextLayout
     , key "Reset"         (modm .|. shiftMask, xK_space     ) $ setLayout (XMonad.layoutHook conf)
     , key "Fullscreen"    (modm              , xK_f         ) $ sendMessage (MT.Toggle NBFULL)
+    , key "Toggle XMobar & Borders" (modm    , xK_m         ) $ do
+        spawn xmobarToggleCommand
+        withFocused toggleBorder
+        -- sendMessage ToggleStruts
+    , key "Restart XMobar" (modm .|. shiftMask, xK_m) $ do
+        killAllStatusBars
+        startAllStatusBars
+    -- NB: to toggle XMobar, use modm + xK_b
     ] ^++^
   keySet "Windows"
     [ key "Close focused"   (modm              , xK_BackSpace) kill
+    ] ^++^
+  keySet "Utilities"
+    [ key "Take Screenshot" (0, xK_Print) $ spawn "flameshot gui"
     ]
   where
     keySet s ks = subtitle s : ks
     key n k a = (k, addName n a)
     playerctl c  = "playerctl --player=spotify,%any " <> c
 
+    xmobarToggleCommand :: String
+    xmobarToggleCommand = "dbus-send --session --dest=org.Xmobar.Control --type=method_call '/org/Xmobar/Control' org.Xmobar.Control.SendSignal 'string:Toggle 0'"
+
 myManageHook :: ManageHook
 myManageHook = composeAll
     [ className =? "Gimp" --> doFloat
+    , emacsEverywhere     --> doCenterFloat
     , isDialog            --> doFloat
     ]
+ where
+   emacsEverywhere = do
+     wTitle <- title
+     let prefix pre = isPrefixOf pre wTitle
+     pure $ prefix "Emacs Everywhere" || prefix "emacs-everywhere"
+
+{-
+-- | Move the window to the floating layer.
+doFloat :: ManageHook
+doFloat = ask >>= \w -> doF . W.float w . snd =<< liftX (floatLocation w)
+-}
 
 myLayout = avoidStrutsOn [U] (tiled ||| Mirror tiled ||| Full ||| threeCol)
   where

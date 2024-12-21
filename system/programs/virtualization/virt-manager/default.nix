@@ -3,6 +3,7 @@
     enable = true;
     allowedBridges = [
       "wlp0s20f3"
+      "virbr0"
     ];
   };
 

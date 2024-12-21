@@ -77,15 +77,17 @@ in
         libGL
         libxml2
         libxkbcommon
-        python311
+        # python311
         (python311.withPackages (ps:
           with ps; [
             pypresence
             z3-solver
             frida-python
             frida-tools
+            angr
           ]))
         # frida-tools
+        z3
 
         xorg.libX11
         xorg.libxcb

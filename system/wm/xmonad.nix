@@ -71,12 +71,12 @@
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement = {
-      enable = false;
+      enable = true;
       finegrained = true;
     };
-    open = true;
+    open = false;
     nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    package = config.boot.kernelPackages.nvidiaPackages.beta;
 
     prime = {
       offload = {

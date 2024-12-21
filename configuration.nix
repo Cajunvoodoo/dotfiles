@@ -231,15 +231,21 @@ in {
       openvpn
 
       wgnord
+
+      pijul
     ];
   };
 
-  services.xrdp = {
-    enable = true;
-    openFirewall = true;
-    defaultWindowManager = "~/.xsession";
-    audio.enable = true;
-  };
+  # services.logind = {
+  #   lidSwitchExternalPower = "ignore";
+  # };
+
+  # services.xrdp = {
+  #   enable = true;
+  #   openFirewall = true;
+  #   defaultWindowManager = "~/.xsession";
+  #   audio.enable = true;
+  # };
 
   # programs.openvpn3.enable = true;
 
@@ -360,6 +366,7 @@ in {
     icu # requirement for dotnet & rider
     # jdk11
     fontconfig
+    virtiofsd
     # python3
     # nix-gaming.packages.${pkgs.hostPlatform.system}.proton-ge
     #haskell.packages.ghc92.ghc

@@ -44,13 +44,13 @@
       USB_EXCLUDE_BTUSB = 0;
 
       # Wifi Power Save
-      WIFI_PWR_ON_AC = "on";
+      WIFI_PWR_ON_AC = "off";
       WIFI_PWR_ON_BAT = "on";
 
       # Hybrid Graphics Management
       RUNTIME_PM_DRIVER_DENYLIST = "mei_me";
 
-      MEM_SLEEP_ON_AC = "s2idle";
+      # MEM_SLEEP_ON_AC = "s2idle";
       MEM_SLEEP_ON_BAT = "deep";
     };
   };

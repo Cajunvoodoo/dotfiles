@@ -82,7 +82,7 @@
               };
             };
             overlays = [
-              # inputs.emacs-overlay.overlay -- breaks doom on 30.??
+              inputs.emacs-overlay.overlay # breaks doom on 30.??
             ];
           };
           specialArgs = {inherit inputs;};
