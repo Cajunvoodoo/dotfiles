@@ -1,12 +1,12 @@
 {pkgs, ...}: {
   programs.ssh = {
     enable = true;
+    # Host warhead
+    #   HostName warhead.ccs.neu.edu
+    #   Port 10001
+    #   IdentityFile ~/.ssh/hacker96
+    #   User hacker97
     extraConfig = ''
-      Host warhead
-        HostName warhead.ccs.neu.edu
-        Port 10001
-        IdentityFile ~/.ssh/hacker96
-        User hacker97
       IdentityFile ~/.ssh/hacker96
       IdentityFile ~/.ssh/desktop_ed25519
       IdentityFile ~/.ssh/id_ed25519

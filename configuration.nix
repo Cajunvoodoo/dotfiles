@@ -53,11 +53,16 @@ in {
       "/nix/var/nix/profiles/per-user/root/channels"
     ];
   };
-  documentation.enable = true;
-  documentation.man.enable = true;
-  documentation.dev.enable = true;
-  documentation.nixos.enable = true;
-  documentation.man.generateCaches = false;
+
+  documentation = {
+    enable = true;
+    dev.enable = true;
+    nixos.enable = true;
+    man = {
+      enable = true;
+      generateCaches = false; # SLOW
+    };
+  };
 
   # Use the latest kernel version
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -233,6 +238,9 @@ in {
       wgnord
 
       pijul
+
+      quartus-prime-lite # For EECE course, god save me
+      obsidian
     ];
   };
 

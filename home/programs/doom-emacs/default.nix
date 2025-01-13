@@ -26,6 +26,7 @@
   # Enable Emacs daemon
   services.emacs = {
     enable = true;
+    package = pkgs.emacs-gtk;
     startWithUserSession = "graphical";
     socketActivation.enable = true;
     # defaultEditor = true;
@@ -43,13 +44,19 @@
         emacsclient -c
       '';
     })
+    w3m
     ## Emacs itself
     binutils
     coreutils
     # 28.2 + native-comp
     #((emacsPackagesFor pkgs.emacs-gtk).emacsWithPackages
     #(epkgs: [ epkgs.vterm ]))
-    #cmake
+
+    # necessary for vterm
+    cmake
+    gnumake
+    gcc
+    libtool
 
     # emacsPackages.agda-input
     emacsPackages.agda2-mode
@@ -108,6 +115,11 @@
     # iosevka-comfy.comfy-wide-motion-fixed
     # modeline
     nerd-font-patcher
+
+    # eaf
+    wmctrl
+    fd
+    aria
   ];
 
   fonts.fontconfig.enable = true;

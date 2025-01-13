@@ -84,7 +84,7 @@ in
             z3-solver
             frida-python
             frida-tools
-            angr
+            # angr # marked as broken 3:
           ]))
         # frida-tools
         z3

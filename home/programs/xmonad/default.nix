@@ -35,6 +35,13 @@ in {
     hackgen-font
   ];
 
+  programs.kitty.settings = {
+    font_family = "Berkeley Mono";
+    bold_font = "Berkeley Mono Bold";
+    bold_italic_font = "Berkeley Mono Bold Italic";
+    italic_font = "Berkeley Mono Italic";
+  };
+
   xresources.properties = {
     #"Xft.dpi" = 180;
     "Xft.autohint" = 0;
