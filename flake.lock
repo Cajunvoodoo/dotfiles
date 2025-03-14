@@ -510,11 +510,11 @@
         "pre-commit-hooks-nix": "pre-commit-hooks-nix"
       },
       "locked": {
-        "lastModified": 1726369529,
-        "narHash": "sha256-Xj/1YbaFLwuUv1DpRoo0M8tRnsKcCgYUOguNer/pFB8=",
+        "lastModified": 1739902142,
+        "narHash": "sha256-f707FI3tLzFs+oKy5Q/7Y8T8pzNZhVu6wbij0kMSRqI=",
         "owner": "cajunvoodoo",
         "repo": "xmobar-cajun",
-        "rev": "0a141658ea771ec5e3d3eaa5bbf5d8e7a479a4fb",
+        "rev": "5c892c8bba5eeb60ff1e9bb91823c4fe342c6fd0",
         "type": "github"
       },
       "original": {
