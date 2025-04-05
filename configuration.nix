@@ -41,10 +41,32 @@ in {
   # };
 
   nix = {
+    optimise = {
+      automatic = true;
+      dates = ["01:00"];
+    };
     settings = {
       auto-optimise-store = true;
       experimental-features = ["nix-command" "flakes" "ca-derivations"];
       trusted-users = ["@wheel"];
+      substituters = [
+        "https://cache.nixos.org/"
+        "https://cache.ners.ch/haskell"
+        "https://cache.ners.ch/trilby"
+        "https://nix-gaming.cachix.org"
+        "https://nix-community.cachix.org"
+        "https://pre-commit-hooks.cachix.org"
+        "https://pwndbg.cachix.org"
+      ];
+      trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "haskell:WskuxROW5pPy83rt3ZXnff09gvnu80yovdeKDw5Gi3o="
+        "trilby:AKUGezHi4YbPHCaCf2+XnwWibugjHOwGjH78WqRUnzU="
+        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "pre-commit-hooks.cachix.org-1:Pkk3Panw5AW24TOv6kz3PvLhlH8puAsJTBbOPmBo7Rc="
+        "pwndbg.cachix.org-1:HhtIpP7j73SnuzLgobqqa8LVTng5Qi36sQtNt79cD3k="
+      ];
     };
     nixPath = [
       # "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
@@ -207,7 +229,7 @@ in {
 
       # vmware-workstation
 
-      pwndbg
+      # inputs.pwndbg-src
 
       steam-run
 
@@ -239,9 +261,20 @@ in {
 
       pijul
 
-      quartus-prime-lite # For EECE course, god save me
+      # quartus-prime-lite # For EECE course, god save me
       obsidian
+
+      openssl
+      networkmanagerapplet
+      magic-wormhole-rs
+      ferium
+      prismlauncher
     ];
+  };
+
+  services.mullvad-vpn = {
+    enable = true;
+    package = pkgs.mullvad-vpn;
   };
 
   # services.logind = {
@@ -378,6 +411,8 @@ in {
     # python3
     # nix-gaming.packages.${pkgs.hostPlatform.system}.proton-ge
     #haskell.packages.ghc92.ghc
+    wireguard-ui
+    wireguard-tools
   ];
 
   virtualisation.spiceUSBRedirection.enable = true;

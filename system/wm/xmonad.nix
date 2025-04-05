@@ -26,6 +26,10 @@
         disableWhileTyping = true;
         naturalScrolling = true;
       };
+      mouse = {
+        accelProfile = "flat";
+        accelStepScroll = 0.2;
+      };
     };
 
     xserver = {
@@ -58,6 +62,7 @@
     settings = {
       General = {
         Enable = "Source,Sink,Media,Socket";
+        Disable = "Handsfree,Headset";
       };
     };
   };
@@ -74,7 +79,7 @@
       enable = true;
       finegrained = true;
     };
-    open = false;
+    open = true;
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.beta;
 

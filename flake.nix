@@ -33,6 +33,10 @@
     binary-ninja = {
       url = "github:jchv/nix-binary-ninja";
     };
+
+    # pwndbg-src = {
+    #   url = "github:pwndbg/pwndbg";
+    # };
   };
 
   outputs = inputs @ {
