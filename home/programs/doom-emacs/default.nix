@@ -44,6 +44,7 @@
         emacsclient -c
       '';
     })
+    wordnet
     w3m
     ## Emacs itself
     binutils

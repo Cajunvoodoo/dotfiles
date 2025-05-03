@@ -51,8 +51,8 @@ in {
       trusted-users = ["@wheel"];
       substituters = [
         "https://cache.nixos.org/"
-        "https://cache.ners.ch/haskell"
-        "https://cache.ners.ch/trilby"
+        # "https://cache.ners.ch/haskell"
+        # "https://cache.ners.ch/trilby"
         "https://nix-gaming.cachix.org"
         "https://nix-community.cachix.org"
         "https://pre-commit-hooks.cachix.org"
@@ -61,7 +61,7 @@ in {
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "haskell:WskuxROW5pPy83rt3ZXnff09gvnu80yovdeKDw5Gi3o="
-        "trilby:AKUGezHi4YbPHCaCf2+XnwWibugjHOwGjH78WqRUnzU="
+        # "trilby:AKUGezHi4YbPHCaCf2+XnwWibugjHOwGjH78WqRUnzU="
         "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "pre-commit-hooks.cachix.org-1:Pkk3Panw5AW24TOv6kz3PvLhlH8puAsJTBbOPmBo7Rc="
@@ -178,7 +178,7 @@ in {
 
   # Enable sound with pipewire.
   # sound.enable = true;
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -370,7 +370,7 @@ in {
       #rcu-tar-path = config.age.secrets."rcu.tar.gz".path;
     })
 
-    (callPackage ./binaryninja.nix {})
+    (callPackage ./binaryninja.nix {python = python3;})
 
     # (callPackage ./binaryninja {
     #   #binary-ninja-path = config.age.secrets."binary-ninja.tar.gz".file;

@@ -4,6 +4,8 @@
   buildFHSEnv ? pkgs.buildFHSEnv,
   writeScript ? pkgs.writeScript,
   stdenv,
+  callPackage,
+  python,
 }: let
   binaryNinja = with pkgs;
     stdenv.mkDerivation rec {
@@ -11,7 +13,7 @@
       pname = "binary-ninja";
       # src = /nix/store/a0hgfba2ppclbvshv1rwgjraikspa17q-binary-linux-personal.zip;
 
-      src = /nix/store/zkcalrkagpxrrrf6bf40k0dp3ad21vc0-binaryninja_personal_linux.zip;
+      src = /nix/store/jqxdryfvxg9picz380wdkpwf9w3vi4jd-binaryninja_linux_dev_personal.zip; # /nix/store/zkcalrkagpxrrrf6bf40k0dp3ad21vc0-binaryninja_personal_linux.zip;
 
       # desktopItems = [
       #   (makeDesktopItem {
@@ -66,6 +68,7 @@
         sourceProvenance = with sourceTypes; [binaryNativeCode];
       };
     };
+  myPython = python;
 in
   buildFHSEnv {
     name = "binaryninja";
@@ -78,13 +81,31 @@ in
         libxml2
         libxkbcommon
         # python311
-        (python311.withPackages (ps:
+        (myPython.withPackages (ps:
           with ps; [
             pypresence
             z3-solver
             frida-python
             frida-tools
             # angr # marked as broken 3:
+            # Sidekick-related dependencies
+            requests
+            pygments
+            networkx
+            intervaltree
+            numpy
+            torch
+            scikit-learn
+            (callPackage ./pyjarowinkler.nix {python = myPython;})
+            markdown
+            watchdog
+            pydantic
+            arrow
+            jsonschema
+            accelerate
+            transformers
+            tiktoken
+            (callPackage ./markdown-it-py.nix {python = myPython;})
           ]))
         # frida-tools
         z3
